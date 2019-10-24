@@ -17,9 +17,7 @@ class ContactRepositoryImpl(private val contractDao: ContactDao) : ContactReposi
 
     override fun getAll(): Observable<List<Contact>> {
         return contractDao.getAll()
-            .flatMapIterable { it }
-            .map { item -> Contact(item.id, item.name, item.number) }
-            .toList()
+            .map { list -> list.map { Contact(it.id, it.name, it.number) } }
             .toObservable()
     }
 
