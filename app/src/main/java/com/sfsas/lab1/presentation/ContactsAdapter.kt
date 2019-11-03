@@ -39,7 +39,7 @@ class ContactsAdapter(private var items: List<Contact>? = null) :
         fun bind(item: Contact) {
             dataBinding.container.setOnClickListener {
                 val intent = Intent(context, EditContactActivity::class.java)
-                intent.putExtra("contactId", -1)
+                intent.putExtra("contactId", item.id)
                 startActivity(context, intent, null)
             }
             dataBinding.name.text = item.name

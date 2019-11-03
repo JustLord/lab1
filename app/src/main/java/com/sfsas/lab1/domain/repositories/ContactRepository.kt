@@ -8,4 +8,5 @@ interface ContactRepository {
     fun get(id: Int): Observable<Contact>
     fun getAll(): Observable<List<Contact>>
     fun save(contact: Contact) : Completable
+    fun delete(id: Int) : Completable
 }

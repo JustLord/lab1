@@ -16,5 +16,8 @@ interface ContactDao {
 
     @Insert(onConflict = REPLACE)
     fun insert(contact: ContactDataModel) : Completable
+
+    @Delete
+    fun delete(contact: ContactDataModel) : Completable
 }
 

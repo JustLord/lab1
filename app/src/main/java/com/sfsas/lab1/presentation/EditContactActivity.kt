@@ -44,10 +44,13 @@ class EditContactActivity : AppCompatActivity() {
                 }
             compasiteDisposable.add(disposable)
         }
+        else{
+            contactId = 0
+        }
 
         binding.save.setOnClickListener {
             val contact = Contact(
-                0,
+                contactId,
                 binding.name.text.toString(),
                 binding.number.text.toString()
             )
@@ -58,6 +61,16 @@ class EditContactActivity : AppCompatActivity() {
                 .subscribe()
 
             compasiteDisposable.add(disposable)
+        }
+
+        binding.delete.setOnClickListener {
+            val disposable = repository.delete(contactId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+
+            compasiteDisposable.add(disposable)
+            finish()
         }
     }
 

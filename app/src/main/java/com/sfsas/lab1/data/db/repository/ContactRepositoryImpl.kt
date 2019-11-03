@@ -8,6 +8,9 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 
 class ContactRepositoryImpl(private val contractDao: ContactDao) : ContactRepository {
+    override fun delete(id: Int): Completable {
+        return contractDao.delete(ContactDataModel(id))
+    }
 
     override fun get(id: Int): Observable<Contact> {
         return contractDao.get(id)
@@ -22,6 +25,6 @@ class ContactRepositoryImpl(private val contractDao: ContactDao) : ContactReposi
     }
 
     override fun save(contact: Contact): Completable {
-        return contractDao.insert(ContactDataModel(contact.id, contact.name, contact.number))
+        return contractDao.insert(ContactDataModel( contact.id, contact.name, contact.number))
     }
 }
