@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class ContactDataModel(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val name: String = "",
-    val number: String = ""
+    val number: String = "",
+    val url: String = ""
 )

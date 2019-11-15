@@ -14,17 +14,24 @@ class ContactRepositoryImpl(private val contractDao: ContactDao) : ContactReposi
 
     override fun get(id: Int): Observable<Contact> {
         return contractDao.get(id)
-            .map { dao -> Contact(dao.id, dao.name, dao.number) }
+            .map { dao -> Contact(dao.id, dao.name, dao.number, dao.url) }
             .toObservable()
     }
 
     override fun getAll(): Observable<List<Contact>> {
         return contractDao.getAll()
-            .map { list -> list.map { Contact(it.id, it.name, it.number) } }
+            .map { list -> list.map { Contact(it.id, it.name, it.number, it.url) } }
             .toObservable()
     }
 
     override fun save(contact: Contact): Completable {
-        return contractDao.insert(ContactDataModel( contact.id, contact.name, contact.number))
+        return contractDao.insert(
+            ContactDataModel(
+                contact.id,
+                contact.name,
+                contact.number,
+                contact.url
+            )
+        )
     }
 }

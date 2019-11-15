@@ -14,7 +14,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:inputType="textPersonName"
             android:text="name"
             android:textColor="#000000"
             android:textSize="20sp"
@@ -26,10 +25,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:inputType="numberDecimal"
             android:text="number"
             app:layout_constraintLeft_toLeftOf="@id/name"
             app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <TextView
+            android:id="@+id/url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="url"
+            app:layout_constraintLeft_toLeftOf="@id/number"
+            app:layout_constraintTop_toBottomOf="@id/number" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

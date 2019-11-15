@@ -14,12 +14,12 @@ class ContactsAdapter(private var items: List<Contact>? = null) :
     private lateinit var context: Context
 
     override fun getItemCount(): Int {
-        return items?.count()?:0
+        return items?.count() ?: 0
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(items!=null)
-          holder.bind(items!![position])
+        if (items != null)
+            holder.bind(items!![position])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,7 +29,7 @@ class ContactsAdapter(private var items: List<Contact>? = null) :
         return ViewHolder(dataBinding)
     }
 
-    public fun setValue(items: List<Contact>?){
+    fun setValue(items: List<Contact>?) {
         this.items = items
         notifyDataSetChanged()
     }
@@ -44,6 +44,7 @@ class ContactsAdapter(private var items: List<Contact>? = null) :
             }
             dataBinding.name.text = item.name
             dataBinding.number.text = item.number
+            dataBinding.url.text = item.url
         }
     }
 }

@@ -2,6 +2,8 @@ package com.sfsas.lab1.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +40,35 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("contactId", -1)
             startActivity(intent)
         }
+
+        binding.filter.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                if(s.isNotEmpty()){
+                    val disposable = repository.getAll()
+                        .map{it.filter { contract -> contract.name.contains(s.toString(), true) }}
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { contracts ->
+                            adapter.setValue(contracts)
+                        }
+                    compasiteDisposable.add(disposable)
+                }
+                else{
+                    val disposable = repository.getAll()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { contracts ->
+                            adapter.setValue(contracts)
+                        }
+                    compasiteDisposable.add(disposable)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
 
         val disposable = repository.getAll()
             .subscribeOn(Schedulers.io())
