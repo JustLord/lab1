@@ -11,7 +11,6 @@ import com.sfsas.lab1.R
 import com.sfsas.lab1.data.db.repository.ContactRepositoryImpl
 import com.sfsas.lab1.databinding.ActivityMainBinding
 import com.sfsas.lab1.domain.repositories.ContactRepository
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -29,13 +28,25 @@ class MainActivity : AppCompatActivity() {
         repository = ContactRepositoryImpl((application as Lab1Application).database.contactDao())
     }
 
+    fun update(filter: String = "") {
+        val disposable = repository.getAll()
+            .map {it.filter { contract -> filter.isEmpty() || contract.name.contains(filter, true)}}
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { contracts ->
+                adapter.setValue(contracts)
+            }
+
+        compasiteDisposable.add(disposable)
+    }
+
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
         adapter = ContactsAdapter()
         binding.contactsList.layoutManager = LinearLayoutManager(this)
         binding.contactsList.adapter = adapter
-        binding.floatingActionButton.setOnClickListener{
+        binding.floatingActionButton.setOnClickListener {
             val intent = Intent(this, EditContactActivity::class.java)
             intent.putExtra("contactId", -1)
             startActivity(intent)
@@ -44,25 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding.filter.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                if(s.isNotEmpty()){
-                    val disposable = repository.getAll()
-                        .map{it.filter { contract -> contract.name.contains(s.toString(), true) }}
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { contracts ->
-                            adapter.setValue(contracts)
-                        }
-                    compasiteDisposable.add(disposable)
-                }
-                else{
-                    val disposable = repository.getAll()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { contracts ->
-                            adapter.setValue(contracts)
-                        }
-                    compasiteDisposable.add(disposable)
-                }
+                update(s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -70,13 +63,7 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
 
-        val disposable = repository.getAll()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { contracts ->
-                adapter.setValue(contracts)
-            }
-        compasiteDisposable.add(disposable)
+        update()
     }
 
     override fun onDestroy() {
